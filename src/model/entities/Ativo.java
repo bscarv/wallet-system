@@ -32,7 +32,7 @@ public class Ativo {
 
 	@Override
 	public String toString() {
-		return "[Código: " + codigo + "]";
+		return "[Id: " + id + ", Código: " + codigo + "]";
 	}
 
 	@Override

@@ -47,6 +47,10 @@ public class Posicao {
 	public Double getValorMedio() {
 		return valorMedio;
 	}
+	
+	public void setValorMedio(Double valorMedio) {
+		this.valorMedio = valorMedio;
+	}
 
 	@Override
 	public String toString() {

@@ -137,11 +137,10 @@ public class Operador {
 		return true;
 	}
 
-	public void realizarOperacoes(List<Operacao> operacoes) {
-		// TODO: Lógica para computar tudo que deve entrar e sair da carteira e
-		// atualizar a carteira
+	public void realizarOperacoes(List<Operacao> operacoes) {		
 		for (Operacao o : operacoes) {
-			System.out.println(o);
+			//System.out.println(o);
+			carteira.atualizarCarteira(o);
 		}
 	}
 
