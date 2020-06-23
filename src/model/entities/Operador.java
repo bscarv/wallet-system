@@ -1,5 +1,6 @@
 package model.entities;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Operador {
@@ -140,7 +141,18 @@ public class Operador {
 	public void realizarOperacoes(List<Operacao> operacoes) {		
 		for (Operacao o : operacoes) {
 			//System.out.println(o);
-			carteira.atualizarCarteira(o);
+			//Registra as operações no BD
+			if (o.persistirOperacao(id)) {
+				//Transforma as operações em posições na carteira em memória e no BD
+				carteira.atualizarCarteira(o);	
+			}					
+		}
+	}
+	
+	public void imprimirCarteira() {
+		Collection<Posicao> list = (Collection<Posicao>)carteira.getPosicoes().values();
+		for(Posicao p : list) {
+			System.out.println(p.toString());
 		}
 	}
 

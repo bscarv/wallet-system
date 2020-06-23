@@ -32,7 +32,7 @@ public class Ativo {
 
 	@Override
 	public String toString() {
-		return "[Id: " + id + ", Código: " + codigo + "]";
+		return String.format("[Id: %3d, Código: %6s]", id, codigo);
 	}
 
 	@Override

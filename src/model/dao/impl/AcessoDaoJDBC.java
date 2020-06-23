@@ -9,14 +9,13 @@ import java.sql.Statement;
 import db.DB;
 import db.DbException;
 import model.dao.AcessoDao;
+import model.dao.ComumDao;
 import model.entities.Operador;
 
-public class AcessoDaoJDBC implements AcessoDao {
-
-	private Connection conn;
+public class AcessoDaoJDBC extends ComumDao implements AcessoDao {
 
 	public AcessoDaoJDBC(Connection conn) {
-		this.conn = conn;
+		super(conn);
 	}
 
 	@Override

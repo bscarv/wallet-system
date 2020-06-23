@@ -1,6 +1,6 @@
 package model.services;
 
-import model.dao.DaoFactory;
+import model.dao.FactoryDao;
 import model.dao.impl.AcessoDaoJDBC;
 import model.entities.Operador;
 
@@ -11,7 +11,7 @@ public class Acesso {
 		boolean senha = true;
 		boolean _CPF = true;
 		if (senha && _CPF) {
-			AcessoDaoJDBC obj = (AcessoDaoJDBC) DaoFactory.criarAcessoDao();
+			AcessoDaoJDBC obj = (AcessoDaoJDBC) FactoryDao.criarAcessoDao();
 			obj.cadastrar(op);
 		}
 		else {
@@ -20,7 +20,7 @@ public class Acesso {
 	}
 
 	public static boolean entrar(Operador op) {
-		AcessoDaoJDBC obj = (AcessoDaoJDBC) DaoFactory.criarAcessoDao();	
+		AcessoDaoJDBC obj = (AcessoDaoJDBC) FactoryDao.criarAcessoDao();	
 		
 		if (obj.entrar(op)) {			
 			return true;

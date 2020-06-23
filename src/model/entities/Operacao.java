@@ -3,6 +3,8 @@ package model.entities;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import model.dao.FactoryDao;
+import model.dao.impl.OperacaoDaoJDBC;
 import model.entities.enums.TipoOperacao;
 
 public class Operacao {
@@ -114,5 +116,10 @@ public class Operacao {
 		} else if (!valor.equals(other.valor))
 			return false;
 		return true;
+	}
+
+	public boolean persistirOperacao(Integer idOperador) {
+		OperacaoDaoJDBC obj = (OperacaoDaoJDBC) FactoryDao.criarOperacaoDao();
+		return obj.inserirOperacao(this, idOperador);
 	}	
 }

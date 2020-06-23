@@ -12,15 +12,14 @@ import java.util.TreeMap;
 import db.DB;
 import db.DbException;
 import model.dao.CarteiraDao;
+import model.dao.ComumDao;
 import model.entities.Ativo;
 import model.entities.Posicao;
 
-public class CarteiraDaoJDBC implements CarteiraDao {
-
-	private Connection conn;
+public class CarteiraDaoJDBC extends ComumDao implements CarteiraDao {
 
 	public CarteiraDaoJDBC(Connection conn) {
-		this.conn = conn;
+		super(conn);
 	}
 
 	@Override
@@ -69,55 +68,29 @@ public class CarteiraDaoJDBC implements CarteiraDao {
 		Integer idAtivo = 0;	
 		Integer idPosicao = 0;
 		int rowsAffected = 0;
-		PreparedStatement st1 = null;
-		ResultSet rs1 = null;
-		PreparedStatement st2 = null;
-		ResultSet rs2 = null;
-		PreparedStatement st3 = null;
-		ResultSet rs3 = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
-			st1 = conn.prepareStatement("SELECT tbl_ativos.* "
-										+"FROM tbl_ativos "
-										+"WHERE tbl_ativos.Codigo = ?");			
-			st1.setString(1, p.getAtivo().getCodigo());
-			rs1 = st1.executeQuery();
-						
-			if(rs1.next()) {
-				idAtivo = rs1.getInt("IdAtivo");				
-			}			
-			else
-			{
-				st2 = conn.prepareStatement("INSERT INTO tbl_ativos (Codigo) VALUES (?)",
-											Statement.RETURN_GENERATED_KEYS);
-				st2.setString(1, p.getAtivo().getCodigo());
-				rowsAffected = st2.executeUpdate();
-				
-				if(rowsAffected > 0) {
-					rs2 = st2.getGeneratedKeys();
-					if(rs2.next()) {
-						idAtivo  = rs2.getInt(1);							
-					}
-				}
-				else {
-					throw new DbException("Erro inesperado! Nenhuma linha foi incluida em tbl_ativos.");
-				}				
-			}
-			st3 = conn.prepareStatement("INSERT INTO tbl_posicoes "
+			//Método da superclasse ComumDao que verifica se já existe ativo no DB
+			//e não existindo cria. Em ambos os casos, retorna o id do ativo.
+			idAtivo = persistirAtivo(p.getAtivo().getCodigo());
+			
+			st = conn.prepareStatement("INSERT INTO tbl_posicoes "
 										+ "(Cotas, ValorMedio, IdAtivo, IdOperador) "
 										+ "VALUES "
 										+ "(?, ?, ?, ?)",
 										Statement.RETURN_GENERATED_KEYS);
-			st3.setInt(1, p.getCotas());
-			st3.setDouble(2, p.getValorMedio());
-			st3.setInt(3, idAtivo);
-			st3.setInt(4, idOperador);
+			st.setInt(1, p.getCotas());
+			st.setDouble(2, p.getValorMedio());
+			st.setInt(3, idAtivo);
+			st.setInt(4, idOperador);
 			
-			rowsAffected = st3.executeUpdate();
-			
+			rowsAffected = st.executeUpdate();
+						
 			if(rowsAffected > 0) {
-				rs3 = st3.getGeneratedKeys();
-				if(rs3.next()) {
-					idPosicao  = rs3.getInt(1);						
+				rs = st.getGeneratedKeys();
+				if(rs.next()) {
+					idPosicao  = rs.getInt(1);						
 				}
 				else {
 					throw new DbException("Erro inesperado! Nenhuma linha foi incluida em tbl_posicoes.");
@@ -127,13 +100,9 @@ public class CarteiraDaoJDBC implements CarteiraDao {
 		catch (SQLException e){
 			throw new DbException(e.getMessage());
 		}
-		finally {			
-			DB.closeResultSet(rs1);
-			DB.closeStatement(st1);
-			DB.closeResultSet(rs2);
-			DB.closeStatement(st2);
-			DB.closeResultSet(rs3);
-			DB.closeStatement(st3);
+		finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(st);
 		}		
 		return idPosicao;
 	}

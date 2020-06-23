@@ -54,7 +54,7 @@ public class Posicao {
 
 	@Override
 	public String toString() {
-		return "Posicao [Id: " + id + ", Ativo: " + ativo + ", Cotas: " + cotas + ", Valor médio: " + String.format("R$%.2f", valorMedio) + "]";
+		return String.format("Posicao [Id: %3d, Ativo: " + ativo.toString() + ", Cotas: %4d, Valor médio: R$%5.2f]", id, cotas, valorMedio);
 	}
 
 	@Override

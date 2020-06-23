@@ -2,7 +2,7 @@ package model.entities;
 
 import java.util.Map;
 
-import model.dao.DaoFactory;
+import model.dao.FactoryDao;
 import model.dao.impl.CarteiraDaoJDBC;
 
 public class Carteira {
@@ -26,7 +26,7 @@ public class Carteira {
 	}
 
 	private void carregarCarteira() {
-		CarteiraDaoJDBC obj = (CarteiraDaoJDBC) DaoFactory.criarCarteiraDao();
+		CarteiraDaoJDBC obj = (CarteiraDaoJDBC) FactoryDao.criarCarteiraDao();
 		posicoes = obj.obterPosicoesDaCarteira(idOperador);
 //		for (Posicao p : posicoes.values()) {
 //			System.out.println(p);
@@ -80,7 +80,7 @@ public class Carteira {
 	}
 	
 	private Integer persistirCarteira(Posicao p) {		
-		CarteiraDaoJDBC obj = (CarteiraDaoJDBC) DaoFactory.criarCarteiraDao();
+		CarteiraDaoJDBC obj = (CarteiraDaoJDBC) FactoryDao.criarCarteiraDao();
 		Integer id;
 		if (p.getId() == null) {
 			//Se o objeto posição não possui id, significa que ele é novo

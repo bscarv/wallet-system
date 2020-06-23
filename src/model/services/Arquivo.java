@@ -27,7 +27,7 @@ public class Arquivo {
 			do {
 				line = br.readLine();
 				if(line != null) {					
-					parts = line.split(",");
+					parts = line.split(";");
 					at = new Ativo(parts[1]);
 					list.add(new Operacao(sdf.parse(parts[0]), 
 											at, 
