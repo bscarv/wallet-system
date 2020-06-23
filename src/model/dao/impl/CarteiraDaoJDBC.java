@@ -142,15 +142,25 @@ public class CarteiraDaoJDBC implements CarteiraDao {
 	public Integer atualizarPosicaoNaCarteira(Posicao p) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("UPDATE tbl_posicoes SET Cotas = ?, ValorMedio = ? "
-										+ "WHERE IdPosicao = ?",
-										Statement.RETURN_GENERATED_KEYS);
-			System.out.println(p);
-			st.setInt(1, p.getCotas());
-			st.setDouble(2, p.getValorMedio());
-			st.setInt(3, p.getId());
-			
-			st.executeUpdate();
+			if(p.getCotas() <= 0) {
+				st = conn.prepareStatement("DELETE FROM tbl_posicoes "
+											+ "WHERE IdPosicao = ?",
+											Statement.RETURN_GENERATED_KEYS);
+				st.setInt(1, p.getId());
+				
+				st.executeUpdate();
+			}
+			else {
+				st = conn.prepareStatement("UPDATE tbl_posicoes SET Cotas = ?, ValorMedio = ? "
+											+ "WHERE IdPosicao = ?",
+											Statement.RETURN_GENERATED_KEYS);
+				//System.out.println(p);
+				st.setInt(1, p.getCotas());
+				st.setDouble(2, p.getValorMedio());
+				st.setInt(3, p.getId());
+				
+				st.executeUpdate();
+			}				
 			
 		} catch (SQLException e) {
 			throw new DbException("Erro inesperado!. Não foi possível atualizar a tabela tbl_posicoes");

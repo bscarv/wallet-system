@@ -26,9 +26,9 @@ public class Main {
 			Ativo at  = new Ativo("XPML11");
 			Operacao operacao = new Operacao(sdf.parse("22/06/2020"), 
 												at, 
-												5,
+												10,
 												100.00,
-												TipoOperacao.valueOf("COMPRA"));
+												TipoOperacao.valueOf("VENDA"));
 			list.add(operacao);
 			op.realizarOperacoes(list);			
 		}

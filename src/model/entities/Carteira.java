@@ -37,12 +37,17 @@ public class Carteira {
 		String key = o.getAtivo().getCodigo();
 		Posicao p;		
 		if (posicoes.containsKey(key)) {
+			//Atualiza uma posição já existente no objeto em memória
 			p = operacaoToPosicao(o,posicoes.get(o.getAtivo().getCodigo()));			
 		}else {
+			//Insere uma nova posição no objeto em memória
 			p = operacaoToPosicao(o);			
 		}
+		//Persiste no BD a posição nova/atualizada
 		Integer id = persistirCarteira(p);
+		//Coloca o id da posição do BD no objeto em memória
 		p.setId(id);
+		//Coloca a posição com id na carteira em memória
 		posicoes.put(key, p);		
 	}
 	
@@ -78,9 +83,13 @@ public class Carteira {
 		CarteiraDaoJDBC obj = (CarteiraDaoJDBC) DaoFactory.criarCarteiraDao();
 		Integer id;
 		if (p.getId() == null) {
+			//Se o objeto posição não possui id, significa que ele é novo
+			//e precisa ser inserido no BD
 			id = obj.inserirPosicaoNaCarteira(p, idOperador);
 		}
 		else {
+			//Se o objeto posição já possui id, significa que ele já existe
+			//no BD e precisa ser atualizado.
 			id = obj.atualizarPosicaoNaCarteira(p);
 		}		
 		return id;
