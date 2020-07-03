@@ -15,6 +15,7 @@ import model.dao.CarteiraDao;
 import model.dao.ComumDao;
 import model.entities.Ativo;
 import model.entities.Posicao;
+import model.entities.enums.TipoAtivo;
 
 public class CarteiraDaoJDBC extends ComumDao implements CarteiraDao {
 
@@ -29,7 +30,7 @@ public class CarteiraDaoJDBC extends ComumDao implements CarteiraDao {
 		
 		try {
 			st = conn.prepareStatement(
-				"SELECT tbl_posicoes.*,tbl_ativos.Codigo "
+				"SELECT tbl_posicoes.*,tbl_ativos.Codigo,tbl_ativos.Tipo "
 				+ "FROM tbl_posicoes INNER JOIN tbl_ativos "
 				+ "ON tbl_posicoes.IdAtivo = tbl_ativos.IdAtivo "
 				+ "WHERE tbl_posicoes.IdOperador = ? "
@@ -73,7 +74,7 @@ public class CarteiraDaoJDBC extends ComumDao implements CarteiraDao {
 		try {
 			//Método da superclasse ComumDao que verifica se já existe ativo no DB
 			//e não existindo cria. Em ambos os casos, retorna o id do ativo.
-			idAtivo = persistirAtivo(p.getAtivo().getCodigo());
+			idAtivo = persistirAtivo(p.getAtivo().getCodigo(), p.getAtivo().getTipo());
 			
 			st = conn.prepareStatement("INSERT INTO tbl_posicoes "
 										+ "(Cotas, ValorMedio, IdAtivo, IdOperador) "
@@ -141,7 +142,7 @@ public class CarteiraDaoJDBC extends ComumDao implements CarteiraDao {
 	}
 	
 	private Ativo instanciarAtivo(ResultSet rs) throws SQLException {
-		Ativo ativo = new Ativo(rs.getInt("IdAtivo"), rs.getString("Codigo"));		
+		Ativo ativo = new Ativo(rs.getInt("IdAtivo"), rs.getString("Codigo"), TipoAtivo.valueOf(rs.getString("Tipo")));		
 		return ativo;
 	}
 	

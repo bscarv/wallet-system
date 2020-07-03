@@ -19,7 +19,8 @@ public class AcessoDaoJDBC extends ComumDao implements AcessoDao {
 	}
 
 	@Override
-	public void cadastrar(Operador op) {
+	public boolean cadastrar(Operador op) {
+		boolean ret = false;
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("INSERT INTO tbl_operadores " 
@@ -33,20 +34,22 @@ public class AcessoDaoJDBC extends ComumDao implements AcessoDao {
 			int rowsAffected = st.executeUpdate();
 
 			if (rowsAffected > 0) {
-				ResultSet rs = st.getGeneratedKeys();
-				if (rs.next()) {
-					int id = rs.getInt(1);
-					op.setId(id);
-				}
-				DB.closeResultSet(rs);
+//				ResultSet rs = st.getGeneratedKeys();
+//				if (rs.next()) {
+//					int id = rs.getInt(1);
+//					op.setId(id);
+//				}
+//				DB.closeResultSet(rs);
+				ret = true;
 			} else {
-				throw new DbException("Erro inesperado! Nenhuma linha foi incluida na base de dados.");
+				throw new DbException("Erro inesperado! Nenhuma linha foi incluida na base de dados.");				
 			}
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
 		}
+		return ret;
 	}
 
 	@Override
@@ -66,6 +69,28 @@ public class AcessoDaoJDBC extends ComumDao implements AcessoDao {
 				return true;
 			}
 			return false;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(st);
+		}
+	}
+	
+	@Override
+	public boolean verificarOperadorDisponivel(Operador op) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+			st = conn.prepareStatement("SELECT tbl_operadores.* " 
+					+ "FROM tbl_operadores WHERE tbl_operadores.CPF = ?");
+			st.setString(1, op.get_CPF());
+			rs = st.executeQuery();
+			if (rs.next()) {				
+				return false;
+			}
+			return true;
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {

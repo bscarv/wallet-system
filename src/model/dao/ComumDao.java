@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import db.DB;
 import db.DbException;
+import model.entities.enums.TipoAtivo;
 
 public class ComumDao {
 
@@ -17,7 +18,7 @@ public class ComumDao {
 		this.conn = conn;
 	}
 
-	protected Integer persistirAtivo(String codAtivo) {
+	protected Integer persistirAtivo(String codAtivo, TipoAtivo tipo) {
 		Integer idAtivo = 0;
 		int rowsAffected = 0;
 		PreparedStatement st1 = null;
@@ -36,9 +37,10 @@ public class ComumDao {
 			if (rs1.next()) {
 				idAtivo = rs1.getInt("IdAtivo");
 			} else {
-				st2 = conn.prepareStatement("INSERT INTO tbl_ativos (Codigo) VALUES (?)",
+				st2 = conn.prepareStatement("INSERT INTO tbl_ativos (Codigo, Tipo) VALUES (?, ?)",
 						Statement.RETURN_GENERATED_KEYS);
 				st2.setString(1, codAtivo);
+				st2.setString(2, tipo.toString());
 				rowsAffected = st2.executeUpdate();
 
 				if (rowsAffected > 0) {

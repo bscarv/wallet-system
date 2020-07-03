@@ -98,7 +98,7 @@ public class Operador {
 
 	@Override
 	public String toString() {
-		return "Operador [Id: " + id + ", Nome: " + nome + " " + sobrenome + ", CPF: " + _CPF + "]";
+		return "Operador [Id: " + id + ", Nome: " + nome + " " + sobrenome + ", CPF: " + _CPF + ", Senha: " + senha + "]";
 	}
 
 	@Override

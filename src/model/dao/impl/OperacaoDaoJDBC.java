@@ -31,7 +31,7 @@ public class OperacaoDaoJDBC extends ComumDao implements OperacaoDao{
 		
 		//Método da superclasse ComumDao que verifica se já existe ativo no DB
 		//e não existindo cria. Em ambos os casos, retorna o id do ativo.
-		idAtivo = persistirAtivo(o.getAtivo().getCodigo());	
+		idAtivo = persistirAtivo(o.getAtivo().getCodigo(), o.getAtivo().getTipo());	
 
 		try {
 			st1 = conn.prepareStatement("SELECT tbl_operacoes.* " 

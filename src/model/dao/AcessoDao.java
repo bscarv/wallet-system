@@ -4,8 +4,9 @@ import model.entities.Operador;
 
 public interface AcessoDao {
 
-	void cadastrar(Operador op);
+	boolean cadastrar(Operador op);
 	boolean entrar(Operador op);
+	boolean verificarOperadorDisponivel(Operador op);
 	
 	/*
 	 * void insert(Department obj); void update(Department obj); void
